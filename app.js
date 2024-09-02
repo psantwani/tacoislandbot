@@ -19,6 +19,11 @@ app.use(express.static('public'));
 const validUsername = process.env.ADMIN_USER;
 const validPassword = process.env.ADMIN_PASS;
 
+let dailyReportCounter = {
+    date: getESTDate(),
+    count: 0
+};
+
 // /login API implementation
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -193,7 +198,7 @@ async function sendDailyReport() {
         const body = `
 Hi Aman,
 
-Please find attached the daily operations report for ${date}. This report includes all form submissions for both the Opening and Closing sheets for the day. Please review the attached document for detailed information on the tasks completed by each team member. Wishing you a productive and successful day ahead.
+Please find attached the daily operations report for ${date}. This report includes all form submissions for both the Opening and Closing sheets for the day. Please review the tasks completed by each team member. Wishing you a productive and successful day ahead.
 
 Best regards,
 Bot by Piyush.
@@ -249,7 +254,27 @@ function sendEmail(subject, body, pdfPath, pdfName, xlsxPath, xlsxName) {
     });
 }
 
-// sendDailyReport();
+// Test endpoint to trigger the daily report email
+app.post('/test/sendDailyReport', (req, res) => {
+    const today = getESTDate();
+
+    // Reset the counter if the date has changed
+    if (dailyReportCounter.date !== today) {
+        dailyReportCounter.date = today;
+        dailyReportCounter.count = 0;
+    }
+
+    // Check if the limit has been reached
+    if (dailyReportCounter.count >= 5) {
+        return res.status(429).json({ success: false, message: 'Daily report limit reached. Try again tomorrow.' });
+    }
+
+    // Call the sendDailyReport function
+    sendDailyReport();
+    dailyReportCounter.count += 1;
+
+    res.json({ success: true, message: 'Daily report sent successfully.' });
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;
