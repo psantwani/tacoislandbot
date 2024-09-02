@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #f7f3f0, #eae8e4);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .thank-you-container {
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        a, button {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        button {
+            background-color: #dc3545;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #c82333;
+        }
+
+        @media (max-width: 600px) {
+            .thank-you-container {
+                padding: 15px 20px;
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="thank-you-container">
+        <h2>Thank You!</h2>
+        <p>Your form has been submitted successfully.</p>
+        <a href="index.html">Go to Home</a>
+        <button id="logout">Logout</button>
+    </div>
+    <script>
+        document.getElementById('logout').addEventListener('click', function() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

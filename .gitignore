@@ -1,0 +1,5 @@
+.env
+node_modules/
+submissions/*.json
+submissions/*.pdf
+submissions/*.xlsx
