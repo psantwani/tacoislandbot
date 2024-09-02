@@ -93,8 +93,9 @@ app.post('/submit-form', (req, res) => {
 
 // Function to delete all files in the 'submissions' directory except for the current date
 function deleteOldFiles() {
-    const currentDate = getESTDate(); // Get the current date in EST
     const submissionsDir = path.join(__dirname, 'submissions');
+    const currentDate = getESTDate();
+    const oneWeekAgo = moment(currentDate).subtract(7, 'days').format('YYYY-MM-DD');
 
     fs.readdir(submissionsDir, (err, files) => {
         if (err) {
@@ -102,11 +103,11 @@ function deleteOldFiles() {
         }
 
         files.forEach(file => {
-            // Extract the date part from the filename
-            const fileDate = file.split('.')[0]; // Assumes filenames are like '2024-09-01.pdf' or '2024-09-01.xlsx'
+            // Extract the date part from the filename (assumes 'YYYY-MM-DD' format)
+            const fileDate = file.split('.')[0];
 
-            // If the file date is not the current date, delete the file
-            if (fileDate !== currentDate) {
+            // Check if the file date is older than one week ago
+            if (moment(fileDate).isBefore(oneWeekAgo)) {
                 const filePath = path.join(submissionsDir, file);
                 fs.unlink(filePath, (err) => {
                     if (err) {
