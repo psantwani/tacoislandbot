@@ -240,7 +240,7 @@ function sendEmail(subject, body, pdfPath, pdfName, xlsxPath, xlsxName) {
 
     let mailOptions = {
         from: `"Bot by Piyush" <${process.env.EMAIL_USER}>`, // Sender address
-        to: "psantwani1@gmail.com", // List of receivers
+        to: "TacoIslandLife@gmail.com", // List of receivers
         subject: subject, // Subject line
         text: body, // Plain text body
         attachments: attachments
@@ -255,7 +255,7 @@ function sendEmail(subject, body, pdfPath, pdfName, xlsxPath, xlsxName) {
 }
 
 // Test endpoint to trigger the daily report email
-app.post('/test/sendDailyReport', (req, res) => {
+app.get('/test/sendDailyReport', (req, res) => {
     const today = getESTDate();
 
     // Reset the counter if the date has changed
