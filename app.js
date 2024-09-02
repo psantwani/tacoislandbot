@@ -249,7 +249,7 @@ function sendEmail(subject, body, pdfPath, pdfName, xlsxPath, xlsxName) {
     });
 }
 
-sendDailyReport();
+// sendDailyReport();
 
 // Start the server
 const PORT = process.env.PORT || 3000;
