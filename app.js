@@ -1,11 +1,5 @@
-const puppeteer = require('puppeteer');
-const XLSX = require('xlsx');
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
-const axios = require('axios');
-const cron = require('node-cron');
 const nodemailer = require('nodemailer');
 const moment = require('moment-timezone'); // Add moment-timezone for timezone handling
 require('dotenv').config();
@@ -18,11 +12,6 @@ app.use(express.static('public'));
 // Dummy user credentials for demonstration
 const validUsername = process.env.ADMIN_USER;
 const validPassword = process.env.ADMIN_PASS;
-
-let dailyReportCounter = {
-    date: getESTDate(),
-    count: 0
-};
 
 // /login API implementation
 app.post('/login', (req, res) => {
@@ -45,17 +34,16 @@ function getESTTime() {
 }
 
 // Form submission handling
-app.post('/submit-form', (req, res) => {
+app.post('/submit-form', async (req, res) => {
+    console.log('Form submitted:', JSON.stringify(req.body));
     const formData = req.body;
-    const date = getESTDate(); // Get current EST date
-    const time = getESTTime(); // Get current EST time
-    const filePath = path.join(__dirname, 'submissions', `${date}.json`);
+    const date = getESTDate();
+    const time = getESTTime();
 
-    // Create a structured object with tasks as an array
     const submission = {
         name: formData.name.trim(),
-        sheetType: formData.sheetType, // Add sheet type (Opening or Closing)
-        time: time, // Add time of submission
+        sheetType: formData.sheetType,
+        time: time,
         tasks: []
     };
 
@@ -72,164 +60,64 @@ app.post('/submit-form', (req, res) => {
         }
     });
 
-    // Read existing data or start with an empty array
-    let submissions = [];
-    if (fs.existsSync(filePath)) {
-        const data = fs.readFileSync(filePath);
-        submissions = JSON.parse(data);
-    }
-
-    // Check if the user already has an entry and update it, otherwise add a new entry
-    const existingIndex = submissions.findIndex(sub => sub.name.toLowerCase() === submission.name.toLowerCase() && sub.sheetType === submission.sheetType);
-
-    if (existingIndex !== -1) {
-        // Override the existing entry with the new submission
-        submissions[existingIndex] = submission;
-    } else {
-        // Add the new structured form submission
-        submissions.push(submission);
-    }
-
-    // Write the updated data back to the file
-    fs.writeFileSync(filePath, JSON.stringify(submissions, null, 2));
-
-    // Redirect to thank you page
-    res.redirect('/thank-you.html');
-});
-
-// Function to delete all files in the 'submissions' directory except for the current date
-function deleteOldFiles() {
-    const submissionsDir = path.join(__dirname, 'submissions');
-    const currentDate = getESTDate();
-    const oneWeekAgo = moment(currentDate).subtract(7, 'days').format('YYYY-MM-DD');
-
-    fs.readdir(submissionsDir, (err, files) => {
-        if (err) {
-            return console.error(`Unable to scan directory: ${err}`);
+    try {
+        console.log('Sending report...');
+        sent = await sendReport(submission, date);
+        if (sent) {
+            // Redirect to thank you page
+            console.log('Report sent successfully!');
+            return res.json({ ok: true });
         }
+    } catch (error) {
+        console.error('Error sending report', error);
+    }
 
-        files.forEach(file => {
-            // Extract the date part from the filename (assumes 'YYYY-MM-DD' format)
-            const fileDate = file.split('.')[0];
-
-            // Check if the file date is older than one week ago
-            if (moment(fileDate).isBefore(oneWeekAgo)) {
-                const filePath = path.join(submissionsDir, file);
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error(`Error deleting file ${file}: ${err}`);
-                    } else {
-                        console.log(`Deleted file: ${file}`);
-                    }
-                });
-            }
-        });
-    });
-}
-
-// Cron job to send daily report at midnight EST
-cron.schedule('0 23 * * *', () => {
-    sendDailyReport();
-    deleteOldFiles();
-}, {
-    timezone: "America/New_York"
+    return res.json({ ok: false });
 });
 
-async function generatePDF(htmlContent, outputPath) {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(htmlContent);
-    await page.pdf({ path: outputPath, format: 'A4' });
-    await browser.close();
-}
 
-// Function to generate HTML report and send email
-async function sendDailyReport() {
-    const date = getESTDate(); // Get current EST date
-    const filePath = path.join(__dirname, 'submissions', `${date}.json`);
-    const pdfFilePath = path.join(__dirname, 'submissions', `${date}.pdf`);
-    const xlsxFilePath = path.join(__dirname, 'submissions', `${date}.xlsx`);
+// Generate HTML report and send an email
+async function sendReport(submission, date) {
+    let htmlContent = `<html><body>`;
+    htmlContent += `<h4>Name: ${submission.name} (${submission.sheetType} Sheet)</h4>`;
+    htmlContent += `<p>Time of Submission: ${submission.time}</p>`;
+    htmlContent += `<table border="1" cellpadding="5"><tr><th>Task</th><th>Answer</th><th>Notes</th></tr>`;
+    submission.tasks.forEach((task) => {
+        htmlContent += `<tr><td>${task.question}</td><td>${task.answer}</td><td>${task.notes}</td></tr>`;
+    });
+    htmlContent += `</table><br>`;
+    htmlContent += `</body></html>`;
 
-    if (fs.existsSync(filePath)) {
-        const data = fs.readFileSync(filePath);
-        const submissions = JSON.parse(data);
-        const rows = [];
 
-        // Generate HTML content
-        let htmlContent = `<html><head><title>Form Submissions for ${date}</title></head><body>`;
-        htmlContent += `<h3>Form Submissions for ${date}</h3>`;
+    // Define the subject and body using the provided template
+    const subject = `${submission.sheetType} Sheet Report from ${submission.name} - ${date}`;
+    const body = `
+<p>Hi Aman,<p>
+<p>Please find the report for ${submission.sheetType} sheet submitted by ${submission.name} on ${date} below.</p>
+${htmlContent}
+<br/>
 
-        submissions.forEach((submission) => {
-            htmlContent += `<h4>Name: ${submission.name} (${submission.sheetType} Sheet)</h4>`;
-            htmlContent += `<p>Time of Submission: ${submission.time}</p>`;
-            htmlContent += `<table border="1" cellpadding="5"><tr><th>Task</th><th>Answer</th><th>Notes</th></tr>`;
-            submission.tasks.forEach((task) => {
-                htmlContent += `<tr><td>${task.question}</td><td>${task.answer}</td><td>${task.notes}</td></tr>`;
-            });
-            htmlContent += `</table><br>`;
-
-            submission.tasks.forEach(task => {
-                rows.push({
-                    Name: submission.name,
-                    SheetType: submission.sheetType,
-                    Time: submission.time,
-                    Task: task.question,
-                    Answer: task.answer,
-                    Notes: task.notes
-                });
-            });
-
-        });
-
-        htmlContent += `</body></html>`;
-
-        await generatePDF(htmlContent, pdfFilePath);
-
-        const worksheet = XLSX.utils.json_to_sheet(rows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Daily Report');
-        XLSX.writeFile(workbook, xlsxFilePath);
-
-        // Write the HTML content to a file
-        // fs.writeFileSync(htmlFilePath, htmlContent, 'utf8');
-
-        // Define the subject and body using the provided template
-        const subject = `Daily Operations Report - ${date}`;
-        const body = `
-Hi Aman,
-
-Please find attached the daily operations report for ${date}. This report includes all form submissions for both the Opening and Closing sheets for the day. Please review the tasks completed by each team member. Wishing you a productive and successful day ahead.
-
-Best regards,
+Best regards,<br/>
 Bot by Piyush.
         `;
 
+    try {
         // Call the sendEmail function with the prepared data
-        sendEmail(subject, body, pdfFilePath, `${date}.pdf`, xlsxFilePath, `${date}.xlsx`);
-    } else {
-        console.log(`No submissions found for ${date}`);
+        const delivered = await sendEmail(subject, body, htmlContent);
+
+        if (delivered) {
+            console.log('Report sent successfully!');
+            return true;
+        }
+    } catch (error) {
+        console.error('Error sending report:', error);
     }
+
+    return false;
 }
 
 // Function to send an email with the provided subject, body, and attachment
-function sendEmail(subject, body, pdfPath, pdfName, xlsxPath, xlsxName) {
-    attachments = []
-    if (fs.existsSync(pdfPath)) {
-        attachments.push({
-            filename: pdfName,
-            path: pdfPath,
-            contentType: 'application/pdf'
-        });
-    }
-
-    if (fs.existsSync(xlsxPath)) {
-        attachments.push({
-            filename: xlsxName,
-            path: xlsxPath,
-            contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
-    }
-
+async function sendEmail(subject, body) {
     let transporter = nodemailer.createTransport({
         service: 'gmail', // Use your email service provider
         auth: {
@@ -240,41 +128,22 @@ function sendEmail(subject, body, pdfPath, pdfName, xlsxPath, xlsxName) {
 
     let mailOptions = {
         from: `"Bot by Piyush" <${process.env.EMAIL_USER}>`, // Sender address
-        to: "TacoIslandLife@gmail.com", // List of receivers
+        to: "tacoislandlife@gmail.com", // List of receivers
         subject: subject, // Subject line
-        text: body, // Plain text body
-        attachments: attachments
+        html: body,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.error(`Error sending email: ${error}`);
-        }
-        console.log(`Email sent successfully: ${info.response}`);
-    });
+    try {
+        console.log('Sending email...');
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully!');
+        return true;
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+
+    return false;
 }
-
-// Test endpoint to trigger the daily report email
-app.get('/test/sendDailyReport', (req, res) => {
-    const today = getESTDate();
-
-    // Reset the counter if the date has changed
-    if (dailyReportCounter.date !== today) {
-        dailyReportCounter.date = today;
-        dailyReportCounter.count = 0;
-    }
-
-    // Check if the limit has been reached
-    if (dailyReportCounter.count >= 5) {
-        return res.status(429).json({ success: false, message: 'Daily report limit reached. Try again tomorrow.' });
-    }
-
-    // Call the sendDailyReport function
-    sendDailyReport();
-    dailyReportCounter.count += 1;
-
-    res.json({ success: true, message: 'Daily report sent successfully.' });
-});
 
 // Start the server
 const PORT = process.env.PORT || 3000;

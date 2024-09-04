@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,84 +8,90 @@
 </head>
 <style>
     body {
-         font-family: Arial, sans-serif;
-         background: linear-gradient(120deg, #f7f3f0, #eae8e4);
-         min-height: 100vh;
-         margin: 0;
-         padding: 20px; /* Ensure some space around the edges */
-         display: flex;
-         justify-content: center;
-         align-items: flex-start; /* Align items at the top */
-         box-sizing: border-box;
-         overflow-y: auto; /* Enable scrolling on the entire page */
-     }
+        font-family: Arial, sans-serif;
+        background: linear-gradient(120deg, #f7f3f0, #eae8e4);
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        /* Ensure some space around the edges */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        /* Align items at the top */
+        box-sizing: border-box;
+        overflow-y: auto;
+        /* Enable scrolling on the entire page */
+    }
 
-     .sheet-container {
-         background-color: white;
-         padding: 20px 30px;
-         border-radius: 8px;
-         /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-         width: 100%;
-         box-sizing: border-box;
-         max-width: 400px;
-         text-align: center;
-         margin-top: 20px; /* Add space at the top */
-     }
+    .sheet-container {
+        background-color: white;
+        padding: 20px 30px;
+        border-radius: 8px;
+        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 400px;
+        text-align: center;
+        margin-top: 20px;
+        /* Add space at the top */
+    }
 
-     h2 {
-         color: #333;
-         margin-bottom: 20px;
-     }
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
 
-     h3 {
-         margin-bottom: 0px;
-     }
+    h3 {
+        margin-bottom: 0px;
+    }
 
-     form {
-         display: flex;
-         flex-direction: column;
-         gap: 15px;
-         text-align: left;
-     }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: left;
+    }
 
-     label {
-         font-size: 16px;
-         /* color: #555; */
-         text-align: left;
-         margin-top: 1em;
-     }
+    label {
+        font-size: 16px;
+        /* color: #555; */
+        text-align: left;
+        margin-top: 1em;
+    }
 
-     input[type="text"], select {
-         padding: 10px;
-         border: 1px solid #ddd;
-         border-radius: 4px;
-         font-size: 16px;
-         width: 90%;
-     }
+    input[type="text"],
+    select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 90%;
+    }
 
-     button {
-         padding: 10px;
-         background-color: #28a745;
-         color: white;
-         border: none;
-         border-radius: 4px;
-         font-size: 16px;
-         cursor: pointer;
-         transition: background-color 0.3s;
-         margin-top: 1em;
-     }
+    button {
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 1em;
+    }
 
-     button:hover {
-         background-color: #218838;
-     }
+    button:hover {
+        background-color: #218838;
+    }
 
-     @media (max-width: 600px) {
-         .sheet-container {
-             padding: 15px 20px;
-             max-width: 90%;
-         }
-     }
- </style>
+    @media (max-width: 600px) {
+        .sheet-container {
+            padding: 15px 20px;
+            max-width: 90%;
+        }
+    }
+</style>
+
 <body>
     <script>
         // Redirect to login if not logged in
@@ -185,7 +192,8 @@
 
                 <label for="task9">9. Refill (bags, utensils, All cups and lids, napkins):</label>
                 <input type="hidden" name="task9_question" value="Refill (bags, utensils, All cups and lids, napkins)">
-                <select id="task9" name="task9" data-question="Refill (bags, utensils, All cups and lids, napkins)" required>
+                <select id="task9" name="task9" data-question="Refill (bags, utensils, All cups and lids, napkins)"
+                    required>
                     <option value="" disabled selected>Select an option</option>
                     <option value="Done">Done</option>
                     <option value="No">No</option>
@@ -254,8 +262,10 @@
                 <input type="text" id="task15_notes" name="task15_notes" placeholder="Optional notes">
 
                 <label for="task16">16. Agua Fresca & Margarita machine - Cleaned & refilled:</label>
-                <input type="hidden" name="task16_question" value="Agua Fresca & Margarita machine - Cleaned & refilled">
-                <select id="task16" name="task16" data-question="Agua Fresca & Margarita machine - Cleaned & refilled" required>
+                <input type="hidden" name="task16_question"
+                    value="Agua Fresca & Margarita machine - Cleaned & refilled">
+                <select id="task16" name="task16" data-question="Agua Fresca & Margarita machine - Cleaned & refilled"
+                    required>
                     <option value="" disabled selected>Select an option</option>
                     <option value="Done">Done</option>
                     <option value="No">No</option>
@@ -268,5 +278,41 @@
 
         </div>
     </div>
+    <script>
+        document.getElementById('close-sheet-form').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission behavior
+
+            const formElement = document.getElementById('close-sheet-form');
+            const formData = new FormData(formElement); // Collect form data
+
+            // Convert FormData to JSON object
+            const formDataObject = {};
+            formData.forEach((value, key) => {
+                formDataObject[key] = value;
+            });
+
+            fetch('/submit-form', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataObject) // Send JSON payload
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to a thank-you page or display a success message
+                        window.location.href = '/thank-you.html';
+                    } else {
+                        console.log('Error:', response);
+                        alert('There was an error submitting the form. Please report it.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error submitting the form. Please report it.');
+                });
+        });
+    </script>
 </body>
+
 </html>
