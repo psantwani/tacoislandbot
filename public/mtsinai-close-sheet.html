@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Close Sheet</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(120deg, #f7f3f0, #eae8e4);
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        /* Ensure some space around the edges */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        /* Align items at the top */
+        box-sizing: border-box;
+        overflow-y: auto;
+        /* Enable scrolling on the entire page */
+    }
+
+    .sheet-container {
+        background-color: white;
+        padding: 20px 30px;
+        border-radius: 8px;
+        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 400px;
+        text-align: center;
+        margin-top: 20px;
+        /* Add space at the top */
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        margin-bottom: 0px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: left;
+    }
+
+    label {
+        font-size: 16px;
+        /* color: #555; */
+        text-align: left;
+        margin-top: 1em;
+    }
+
+    input[type="text"],
+    select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 90%;
+    }
+
+    button {
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 1em;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    @media (max-width: 600px) {
+        .sheet-container {
+            padding: 15px 20px;
+            max-width: 90%;
+        }
+    }
+</style>
+
+<body>
+    <script>
+        // Redirect to login if not logged in
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <div class="sheet-container">
+        <h2>Mt Sinai Closing Sheet</h2>
+        <div class="sheet-container">
+            <form id="mtsinai-close-sheet-form" action="/submit-form" method="POST">
+                <input type="hidden" name="sheetType" value="Mt Sinai Closing Sheet">
+
+                <h3>Tasks</h3>
+
+                <label for="task1">1. Text Sagar for Catering:</label>
+                <input type="hidden" name="task1_question" value="Text Sagar for Catering">
+                <input type="text" id="task1_notes" name="task1_notes" placeholder="Enter name" required>
+
+                <label for="task2">2. Music Off:</label>
+                <input type="hidden" name="task2_question" value="Music Off">
+                <input type="text" id="task2_notes" name="task2_notes" placeholder="Enter name" required>
+
+                <label for="task3">3. Tv Off:</label>
+                <input type="hidden" name="task3_question" value="Tv Off">
+                <input type="text" id="task3_notes" name="task3_notes" placeholder="Enter name" required>
+
+                <label for="task4">4. AC Off:</label>
+                <input type="hidden" name="task4_question" value="AC Off">
+                <input type="text" id="task4_notes" name="task4_notes" placeholder="Enter name" required>
+
+                <label for="task5">5. Lights Off:</label>
+                <input type="hidden" name="task5_question" value="Lights Off">
+                <input type="text" id="task5_notes" name="task5_notes" placeholder="Enter name" required>
+
+                <label for="task6">6. Store front glass cleaned:</label>
+                <input type="hidden" name="task6_question" value="Store front glass cleaned">
+                <input type="text" id="task6_notes" name="task6_notes" placeholder="Enter name" required>
+
+                <label for="task7">7. Coke Fridge cleaned and Restocked:</label>
+                <input type="hidden" name="task7_question" value="Coke Fridge cleaned and Restocked">
+                <input type="text" id="task7_notes" name="task7_notes" placeholder="Enter name" required>
+
+                <label for="task8">8. Bathroom cleaned and restocked:</label>
+                <input type="hidden" name="task8_question" value="Bathroom cleaned and restocked">
+                <input type="text" id="task8_notes" name="task8_notes" placeholder="Enter name" required>
+
+                <label for="task9">9. Garbage out:</label>
+                <input type="hidden" name="task9_question" value="Garbage out">
+                <input type="text" id="task9_notes" name="task9_notes" placeholder="Enter name" required>
+
+                <label for="task10">10. Furniture clean and stored:</label>
+                <input type="hidden" name="task10_question" value="Furniture clean and stored">
+                <input type="text" id="task10_notes" name="task10_notes" placeholder="Enter name" required>
+
+                <label for="task11">11. Broom and vacuum floor:</label>
+                <input type="hidden" name="task11_question" value="Broom and vacuum floor">
+                <input type="text" id="task11_notes" name="task11_notes" placeholder="Enter name" required>
+
+                <label for="task12">12. Floor mopped:</label>
+                <input type="hidden" name="task12_question" value="Floor mopped">
+                <input type="text" id="task12_notes" name="task12_notes" placeholder="Enter name" required>
+
+                <label for="task13">13. Cash register closed:</label>
+                <input type="hidden" name="task13_question" value="Cash register closed">
+                <input type="text" id="task13_notes" name="task13_notes" placeholder="Enter name" required>
+
+                <label for="task14">14. Sauces stored:</label>
+                <input type="hidden" name="task14_question" value="Sauces stored">
+                <input type="text" id="task14_notes" name="task14_notes" placeholder="Enter name" required>
+
+                <label for="task15">15. Clean front counter:</label>
+                <input type="hidden" name="task15_question" value="Clean front counter">
+                <input type="text" id="task15_notes" name="task15_notes" placeholder="Enter name" required>
+
+                <label for="task16">16. All devices on charge:</label>
+                <input type="hidden" name="task16_question" value="All devices on charge">
+                <input type="text" id="task16_notes" name="task16_notes" placeholder="Enter name" required>
+
+                <label for="task17">17. Refill Drinks Cups:</label>
+                <input type="hidden" name="task17_question" value="Refill Drinks Cups">
+                <input type="text" id="task17_notes" name="task17_notes" placeholder="Enter name" required>
+
+                <label for="task18">18. Refill Packaging bags & napkins:</label>
+                <input type="hidden" name="task18_question" value="Refill Packaging bags & napkins">
+                <input type="text" id="task18_notes" name="task18_notes" placeholder="Enter name" required>
+
+                <label for="task19">19. Check All 3 Agua Fresca:</label>
+                <input type="hidden" name="task19_question" value="Check All 3 Agua Fresca">
+                <input type="text" id="task19_notes" name="task19_notes" placeholder="Enter name" required>
+
+
+                <button type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script type="text/javascript">
+        loadForm('mtsinai-close-sheet-form');
+        cacheForm('mtsinai-close-sheet-form');
+        submitForm('mtsinai-close-sheet-form');
+    </script>
+</body>
+
+</html>

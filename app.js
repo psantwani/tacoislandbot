@@ -35,13 +35,11 @@ function getESTTime() {
 
 // Form submission handling
 app.post('/submit-form', async (req, res) => {
-    console.log('Form submitted:', JSON.stringify(req.body));
     const formData = req.body;
     const date = getESTDate();
     const time = getESTTime();
 
     const submission = {
-        name: formData.name.trim(),
         sheetType: formData.sheetType,
         time: time,
         tasks: []
@@ -49,16 +47,17 @@ app.post('/submit-form', async (req, res) => {
 
     // Extract task questions and responses
     Object.keys(formData).forEach(key => {
-        if (key.startsWith('task') && !key.endsWith('_notes') && !key.endsWith('_question')) {
-            const taskIndex = key.match(/\d+/)[0];
+        if (key.startsWith('task') && key.endsWith('_question')) {
+            const taskIndex = key.match(/task(\d+)_question/)[1];
             const questionKey = `task${taskIndex}_question`; // Assuming the question is passed with this name
             submission.tasks.push({
                 question: formData[questionKey], // Correctly set the question from the form data
-                answer: formData[key],
                 notes: formData[`task${taskIndex}_notes`] || ""
             });
         }
     });
+
+    console.log('Submission:', submission);
 
     try {
         console.log('Sending report...');
@@ -79,21 +78,21 @@ app.post('/submit-form', async (req, res) => {
 // Generate HTML report and send an email
 async function sendReport(submission, date) {
     let htmlContent = `<html><body>`;
-    htmlContent += `<h4>Name: ${submission.name} (${submission.sheetType} Sheet)</h4>`;
+    htmlContent += `<h4>${submission.sheetType}</h4>`;
     htmlContent += `<p>Time of Submission: ${submission.time}</p>`;
-    htmlContent += `<table border="1" cellpadding="5"><tr><th>Task</th><th>Answer</th><th>Notes</th></tr>`;
+    htmlContent += `<table border="1" cellpadding="5"><tr><th>Task</th><th>Response</th></tr>`;
     submission.tasks.forEach((task) => {
-        htmlContent += `<tr><td>${task.question}</td><td>${task.answer}</td><td>${task.notes}</td></tr>`;
+        htmlContent += `<tr><td>${task.question}</td><td>${task.notes}</td></tr>`;
     });
     htmlContent += `</table><br>`;
     htmlContent += `</body></html>`;
 
 
     // Define the subject and body using the provided template
-    const subject = `${submission.sheetType} Sheet Report from ${submission.name} - ${date}`;
+    const subject = `${submission.sheetType} Report - ${date}`;
     const body = `
 <p>Hi Aman,<p>
-<p>Please find the report for ${submission.sheetType} sheet submitted by ${submission.name} on ${date} below.</p>
+<p>Please find the report for ${submission.sheetType} submitted on ${date} below.</p>
 ${htmlContent}
 <br/>
 

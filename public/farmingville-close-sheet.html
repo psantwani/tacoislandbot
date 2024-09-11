@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Close Sheet</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(120deg, #f7f3f0, #eae8e4);
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        /* Ensure some space around the edges */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        /* Align items at the top */
+        box-sizing: border-box;
+        overflow-y: auto;
+        /* Enable scrolling on the entire page */
+    }
+
+    .sheet-container {
+        background-color: white;
+        padding: 20px 30px;
+        border-radius: 8px;
+        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 400px;
+        text-align: center;
+        margin-top: 20px;
+        /* Add space at the top */
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        margin-bottom: 0px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: left;
+    }
+
+    label {
+        font-size: 16px;
+        /* color: #555; */
+        text-align: left;
+        margin-top: 1em;
+    }
+
+    input[type="text"],
+    select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 90%;
+    }
+
+    button {
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 1em;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    @media (max-width: 600px) {
+        .sheet-container {
+            padding: 15px 20px;
+            max-width: 90%;
+        }
+    }
+</style>
+
+<body>
+    <script>
+        // Redirect to login if not logged in
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <div class="sheet-container">
+        <h2>Farmingville Closing Sheet</h2>
+        <div class="sheet-container">
+            <form id="famingville-close-sheet-form" action="/submit-form" method="POST">
+                <input type="hidden" name="sheetType" value="Farmingville Closing Sheet">
+
+                <h3>Tasks</h3>
+
+                <label for="task1">1. Text Sagar for catering:</label>
+                <input type="hidden" name="task1_question" value="Text Sagar for catering">
+                <input type="text" id="task1_notes" name="task1_notes" placeholder="Enter name" required>
+
+                <label for="task2">2. Count register:</label>
+                <input type="hidden" name="task2_question" value="Count register">
+                <input type="text" id="task2_notes" name="task2_notes" placeholder="Enter name" required>
+
+                <label for="task3">3. Counter cleaned:</label>
+                <input type="hidden" name="task3_question" value="Counter cleaned">
+                <input type="text" id="task3_notes" name="task3_notes" placeholder="Enter name" required>
+
+                <label for="task4">4. Bathroom cleaned and restocked:</label>
+                <input type="hidden" name="task4_question" value="Bathroom cleaned and restocked">
+                <input type="text" id="task4_notes" name="task4_notes" placeholder="Enter name" required>
+
+                <label for="task5">5. Coke Fridge cleaned and restocked:</label>
+                <input type="hidden" name="task5_question" value="Coke Fridge cleaned and restocked">
+                <input type="text" id="task5_notes" name="task5_notes" placeholder="Enter name" required>
+
+                <label for="task6">6. Beer Fridge cleaned and restocked:</label>
+                <input type="hidden" name="task6_question" value="Beer Fridge cleaned and restocked">
+                <input type="text" id="task6_notes" name="task6_notes" placeholder="Enter name" required>
+
+                <label for="task7">7. Store front glass cleaned:</label>
+                <input type="hidden" name="task7_question" value="Store front glass cleaned">
+                <input type="text" id="task7_notes" name="task7_notes" placeholder="Enter name" required>
+
+                <label for="task8">8. Garbage out:</label>
+                <input type="hidden" name="task8_question" value="Garbage out">
+                <input type="text" id="task8_notes" name="task8_notes" placeholder="Enter name" required>
+
+                <label for="task9">9. Refill (bags, utensils, All cups and lids, napkins):</label>
+                <input type="hidden" name="task9_question" value="Refill (bags, utensils, All cups and lids, napkins)">
+                </select>
+                <input type="text" id="task9_notes" name="task9_notes" placeholder="Enter name" required>
+
+                <label for="task10">10. Dine in area cleaned (mop, broom & vacuum):</label>
+                <input type="hidden" name="task10_question" value="Dine in area cleaned (mop, broom & vacuum)">
+                <input type="text" id="task10_notes" name="task10_notes" placeholder="Enter name" required>
+
+                <label for="task11">11. Tables cleaned:</label>
+                <input type="hidden" name="task11_question" value="Tables cleaned">
+                <input type="text" id="task11_notes" name="task11_notes" placeholder="Enter name" required>
+
+                <label for="task12">12. Turn off - lights & music:</label>
+                <input type="hidden" name="task12_question" value="Turn off - lights & music">
+                <input type="text" id="task12_notes" name="task12_notes" placeholder="Enter name" required>
+
+                <label for="task13">13. Check mango salsa, dine in salsa & Guac:</label>
+                <input type="hidden" name="task13_question" value="Check mango salsa, dine in salsa & Guac">
+                <input type="text" id="task13_notes" name="task13_notes" placeholder="Enter name" required>
+
+                <label for="task14">14. Refill menu - outside & inside:</label>
+                <input type="hidden" name="task14_question" value="Refill menu - outside & inside">
+                <input type="text" id="task14_notes" name="task14_notes" placeholder="Enter name" required>
+
+                <label for="task15">15. All devices charged (tablets & phone):</label>
+                <input type="hidden" name="task15_question" value="All devices charged (tablets & phone)">
+                <input type="text" id="task15_notes" name="task15_notes" placeholder="Enter name" required>
+
+                <label for="task16">16. Agua Fresca & Margarita machine - Cleaned & refilled:</label>
+                <input type="hidden" name="task16_question"
+                    value="Agua Fresca & Margarita machine - Cleaned & refilled">
+                </select>
+                <input type="text" id="task16_notes" name="task16_notes" placeholder="Enter name" required>
+
+                <button type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script type="text/javascript">
+        loadForm('famingville-close-sheet-form');
+        cacheForm('famingville-close-sheet-form');
+        submitForm('famingville-close-sheet-form');
+    </script>
+</body>
+
+</html>

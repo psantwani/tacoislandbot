@@ -82,6 +82,7 @@
         <button id="logout">Logout</button>
     </div>
     <script>
+        // localStorage.clear();
         document.getElementById('logout').addEventListener('click', function() {
             localStorage.removeItem('isLoggedIn');
             window.location.href = 'login.html';
