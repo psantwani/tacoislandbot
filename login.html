@@ -92,28 +92,12 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Call the /login API
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Store login status in local storage
-                    localStorage.setItem('isLoggedIn', 'true');
-                    window.location.href = 'index.html';
-                } else {
-                    alert('Incorrect username or password');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
+            if(username == "admin" && password == "TacoIsland@2024") {
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'index.html';
+            } else {
+                alert('Incorrect username or password');
+            }
         });
     </script>
 </body>
